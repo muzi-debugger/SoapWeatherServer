@@ -1,0 +1,21 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://muzi.com/weather"
+    xmlns:tns="http://muzi.com/weather" elementFormDefault="qualified">
+
+    <xs:element name="getWeatherRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="city" type="xs:string"/>
+                <xs:element name="country" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getWeatherResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="forecast" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
