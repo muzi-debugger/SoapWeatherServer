@@ -1,10 +1,14 @@
 package com.muzi.soapserver.endpoint;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
 
+import com.muzi.soapserver.exception.WeatherServiceException;
 import com.muzi.soapserver.model.GetWeatherRequest;
 import com.muzi.soapserver.model.GetWeatherResponse;
 import com.muzi.soapserver.model.ObjectFactory;
@@ -15,37 +19,44 @@ import jakarta.xml.bind.JAXBElement;
 
 @Endpoint
 public class WeatherEndpoint {
-    // namespace and localPart must match your XSD
-    private static final String NAMESPACE = "http://muzi.com/soapserver/weather";
+    private static final String NAMESPACE = "http://muzi.com/weather";
 
-    // inject your business service
     private final WeatherService weatherService;
 
     public WeatherEndpoint(WeatherService weatherService) {
         this.weatherService = weatherService;
     }
 
-    // constructor…
-
-    // 1) Incoming payload mapping
     @PayloadRoot(namespace = NAMESPACE, localPart = "getWeatherRequest")
     @ResponsePayload
-    public JAXBElement<GetWeatherResponse> handleGetWeather( 
+    public JAXBElement<GetWeatherResponse> handleGetWeather(
             @RequestPayload JAXBElement<GetWeatherRequest> requestElement) {
-        // 2) Unwrap request
+
         GetWeatherRequest req = requestElement.getValue();
+        WeatherData data = weatherService.fetchWeather(req.getCity(), req.getCountry());
 
-        // 3) Delegate to service
-        WeatherData data = weatherService.fetchWeatherData(req.getCity());
+        if (data.getErrorMessage() != null) {
+            throw new WeatherServiceException(data.getErrorMessage());
+        }
 
-        // 4) Build response object
         GetWeatherResponse resp = new GetWeatherResponse();
         resp.setCity(req.getCity());
         resp.setTemperature(data.getTemperature());
         resp.setDescription(data.getDescription());
 
-        // 5) Wrap–up in JAXBElement
         ObjectFactory of = new ObjectFactory();
         return of.createGetWeatherResponse(resp);
     }
+
+    @Bean
+    public PayloadLoggingInterceptor payloadLoggingInterceptor() {
+        return new PayloadLoggingInterceptor();
+    }
+
+    @Bean
+    public EndpointInterceptor[] interceptors() {
+        return new EndpointInterceptor[] { payloadLoggingInterceptor() };
+    }
+    
+
 }

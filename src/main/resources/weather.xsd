@@ -11,11 +11,13 @@
     <xs:element name="getWeatherRequest" type="tns:GetWeatherRequest"/>
 
 
+    <!-- minOccurs="0" makes fields optional, allowing success or failure responses without breaking consumers. -->
     <xs:complexType name="GetWeatherResponse">
         <xs:sequence>
-            <xs:element name="city" type="xs:string"/>
-            <xs:element name="temperature" type="xs:double"/>
-            <xs:element name="description" type="xs:string"/>
+            <xs:element name="city" type="xs:string" minOccurs="0"/>
+            <xs:element name="temperature" type="xs:double" minOccurs="0"/>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+            <xs:element name="errorMessage" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

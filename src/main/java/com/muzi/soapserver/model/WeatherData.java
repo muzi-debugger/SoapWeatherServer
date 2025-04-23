@@ -2,8 +2,10 @@ package com.muzi.soapserver.model;
 
 
 public class WeatherData {
+    
     private double temperature;
     private String description;
+    private String errorMessage;
 
     public WeatherData() {}
 
@@ -12,7 +14,6 @@ public class WeatherData {
         this.description = description;
     }
 
-    // getters and setters
     public double getTemperature() {
         return temperature;
     }
@@ -27,6 +28,14 @@ public class WeatherData {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
 }
