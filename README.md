@@ -23,14 +23,19 @@ Configuration
     ``` git clone https://github.com/muzi-debugger/SoapWeatherServer.git
     cd weather-soap-server
     ``` 
+    
 Declare your API key in the WeatherApiProperties.java class (Not ideal, ongoing issue to be resolved. The api key should be in application.properties)
 ``` mvn clean package ```
+
 Run the jar: 
 ``` weather-soap-server-0.0.1-SNAPSHOT.jar ```
+
 The SOAP endpoint will be available at:
   ``` http://localhost:8080/ws ```
+  
 And the WSDL at:
 ``` http://localhost:8080/ws/weather.wsdl ```
+---
 WSDL / Operations
 
 Once running, retrieve the WSDL: ``` GET http://localhost:8080/ws/weather.wsdl ```
